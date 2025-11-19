@@ -1,0 +1,457 @@
+openapi: 3.0.0
+info:
+  title: Personal Journal Web Application API
+  description: RESTful API for journal entry management
+  version: 1.0.0
+servers:
+  - url: https://{domain}/api
+    description: Production server
+    variables:
+      domain:
+        default: your-app.vercel.app
+
+paths:
+  /journal/entries:
+    get:
+      summary: List journal entries
+      description: Retrieve journal entries, optionally filtered by date
+      operationId: listJournalEntries
+      tags:
+        - Journal
+      parameters:
+        - name: date
+          in: query
+          description: Filter entries by date (YYYY-MM-DD format)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: limit
+          in: query
+          description: Maximum number of entries to return
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+        - name: offset
+          in: query
+          description: Number of entries to skip
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JournalEntry'
+                  total:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create a new journal entry
+      operationId: createJournalEntry
+      tags:
+        - Journal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JournalEntryInput'
+      responses:
+        '201':
+          description: Journal entry created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntry'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /journal/entries/{entryId}:
+    get:
+      summary: Get a specific journal entry
+      operationId: getJournalEntry
+      tags:
+        - Journal
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntry'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    put:
+      summary: Update a journal entry
+      operationId: updateJournalEntry
+      tags:
+        - Journal
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JournalEntryInput'
+      responses:
+        '200':
+          description: Journal entry updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JournalEntry'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      summary: Delete a journal entry
+      operationId: deleteJournalEntry
+      tags:
+        - Journal
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Journal entry deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /journal/entries/{entryId}/sync:
+    post:
+      summary: Trigger calendar sync for a journal entry
+      operationId: syncJournalEntry
+      tags:
+        - Journal
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Sync initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: sync_pending
+                  message:
+                    type: string
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Sync conflict detected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: sync_conflict
+
+  /journal/entries/{entryId}/export:
+    post:
+      summary: Export journal entry to iPhone Notes via Shortcuts
+      operationId: exportJournalEntry
+      tags:
+        - Journal
+      parameters:
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Export URL generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  shortcuts_url:
+                    type: string
+                    format: uri
+                    example: shortcuts://run-shortcut?name=ExportToNotes&input=text&text=...
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /journal/entries/batch-export:
+    post:
+      summary: Export multiple journal entries to iPhone Notes
+      operationId: batchExportJournalEntries
+      tags:
+        - Journal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                entry_ids:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Export URL generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  shortcuts_url:
+                    type: string
+                    format: uri
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /calendar/sync:
+    post:
+      summary: Trigger manual calendar sync
+      operationId: triggerCalendarSync
+      tags:
+        - Calendar
+      responses:
+        '200':
+          description: Sync initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: sync_in_progress
+                  entries_synced:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /calendar/events:
+    get:
+      summary: List calendar events
+      operationId: listCalendarEvents
+      tags:
+        - Calendar
+      parameters:
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CalendarEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  schemas:
+    JournalEntry:
+      type: object
+      required:
+        - id
+        - title
+        - content
+        - date
+        - created_at
+        - updated_at
+        - sync_status
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+          maxLength: 10000
+        date:
+          type: string
+          format: date
+        calendar_event_id:
+          type: string
+          nullable: true
+        sync_status:
+          type: string
+          enum:
+            - not_synced
+            - synced
+            - sync_pending
+            - sync_conflict
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    JournalEntryInput:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        content:
+          type: string
+          maxLength: 10000
+        date:
+          type: string
+          format: date
+
+    CalendarEvent:
+      type: object
+      required:
+        - id
+        - external_event_id
+        - title
+        - start_datetime
+        - sync_direction
+        - last_synced_at
+      properties:
+        id:
+          type: integer
+        external_event_id:
+          type: string
+        journal_entry_id:
+          type: integer
+          nullable: true
+        title:
+          type: string
+        start_datetime:
+          type: string
+          format: date-time
+        end_datetime:
+          type: string
+          format: date-time
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        completion_status:
+          type: string
+          enum:
+            - not_started
+            - in_progress
+            - completed
+            - cancelled
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        sync_direction:
+          type: string
+          enum:
+            - web_to_iphone
+            - iphone_to_web
+            - bidirectional
+        last_synced_at:
+          type: string
+          format: date-time
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Authentication required
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Journal entry not found
+
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: session
+
+security:
+  - sessionAuth: []
+

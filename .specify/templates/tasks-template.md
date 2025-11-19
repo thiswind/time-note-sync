@@ -21,7 +21,8 @@ description: "Task list template for feature implementation"
 ## Path Conventions
 
 - **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
+- **Web app (Flask monolithic)**: `templates/`, `static/`, `models/`, `services/`, `api/`, `tests/` at repository root
+- **Web app (separated)**: `backend/src/`, `frontend/src/` (NOT RECOMMENDED - use monolithic Flask structure per constitution)
 - **Mobile**: `api/src/`, `ios/src/` or `android/src/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
@@ -50,7 +51,8 @@ description: "Task list template for feature implementation"
 
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T003 [P] Configure Black formatting tool (constitution requirement)
+- [ ] T004 [P] Configure lint checks (constitution requirement)
 
 ---
 
@@ -62,12 +64,16 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T005 Setup database schema and migrations framework
+- [ ] T006 [P] Implement authentication/authorization framework (owner-only access, prevent unauthorized access per constitution)
+- [ ] T007 [P] Setup API routing and middleware structure
+- [ ] T008 Create base models/entities that all stories depend on
+- [ ] T009 Configure error handling and logging infrastructure (important operations must have logging per constitution)
+- [ ] T010 [P] Configure data encryption in transit (HTTPS/TLS mandatory encryption per constitution)
+- [ ] T011 [P] Setup automatic rollback mechanism for deployment failures (constitution requirement)
+- [ ] T012 [P] Select and verify mature, mainstream libraries and standard protocols (constitution requirement)
+- [ ] T013 [P] Verify application only uses native browsers and iPhone system built-in tools (no third-party installations required per constitution)
+- [ ] T014 Setup environment configuration management
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -93,7 +99,12 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
 - [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
 - [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T017 [US1] Add logging for user story 1 operations (constitution requirement)
+- [ ] T018 [US1] Add unit tests for major features and critical functions (constitution requirement)
+- [ ] T019 [US1] Ensure API maintains backward compatibility or provides migration path (constitution requirement)
+- [ ] T020 [US1] Design UI/UX following iOS system style and operation habits (constitution requirement)
+- [ ] T021 [US1] Verify UI aligns with iOS Human Interface Guidelines where applicable (constitution requirement)
+- [ ] T022 [US1] Code review before merge (constitution requirement)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

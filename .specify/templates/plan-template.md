@@ -31,7 +31,21 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Code Quality**: All code must be formatted with Black and pass lint checks. Code must pass code review before merge. Minimal comments, self-documenting code.
+
+**Testing**: Unit tests and integration tests required for core functionality and major functions. All major features and critical functions must have unit test coverage. System must support automatic rollback on failure.
+
+**Deployment**: Project deploys to Vercel. Use `main` branch. Create development branch for each iteration, merge after completion, then delete branch.
+
+**Performance**: Maintain standard Python project performance expectations.
+
+**Security & Privacy**: User privacy and security are highest priority. All data must be encrypted in transit (mandatory). Data access restricted to owner only. Authentication required to prevent unauthorized access. Important operations must have logging for traceability.
+
+**Technology Stack**: Must use mature, mainstream libraries and standard protocols. Avoid experimental or unproven technologies unless justified.
+
+**Architecture & Compatibility**: The application must use a monolithic Flask application structure. Frontend content (HTML templates, CSS, JavaScript, and static assets) must be served directly from Flask's `static/` and `templates/` directories. The application must not use a separate frontend build process or separate frontend server. All frontend assets must be integrated into the Flask application structure. Frontend and backend must be designed for easy compatibility upgrades without additional installation burden. API contracts must maintain backward compatibility or provide clear migration paths. Application must not require third-party installations. Must only depend on native browsers and iPhone system built-in tools.
+
+**UI/UX**: All interfaces and interactions must prioritize iOS system style and operation habits. Design must align with iOS Human Interface Guidelines where applicable.
 
 ## Project Structure
 
@@ -68,20 +82,17 @@ tests/
 ├── integration/
 └── unit/
 
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
+# [REMOVE IF UNUSED] Option 2: Web application (Flask monolithic structure)
+app.py                 # Flask application entry point
+templates/             # HTML templates (Jinja2)
+static/                # Static assets (CSS, JavaScript, images)
+├── css/
+├── js/
+└── images/
+models/                # Data models
+services/              # Business logic services
+api/                   # API routes (if needed)
+tests/                  # Test files
 
 # [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
 api/

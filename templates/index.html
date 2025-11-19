@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}我的日志{% endblock %}
+
+{% block content %}
+<div class="home">
+    <nav class="nav-bar">
+        <h1>我的日志</h1>
+        <div class="nav-actions">
+            <button class="icon-btn" id="createBtn" title="新建">
+                <span>+</span>
+            </button>
+            <button class="icon-btn" id="settingsBtn" title="设置">
+                <span>⚙</span>
+            </button>
+            <button class="icon-btn" id="exportBtn" title="批量导出">
+                <span>↗</span>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="content">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="all">全部</button>
+            <button class="tab-btn" data-tab="today">今天</button>
+            <button class="tab-btn" data-tab="date">日期</button>
+        </div>
+        
+        <div class="tab-content" id="allTab">
+            <div class="journal-list" id="journalListAll"></div>
+        </div>
+        
+        <div class="tab-content hidden" id="todayTab">
+            <div class="journal-list" id="journalListToday"></div>
+        </div>
+        
+        <div class="tab-content hidden" id="dateTab">
+            <div class="date-navigation">
+                <button class="date-nav-btn" id="prevDateBtn">‹</button>
+                <input type="date" id="datePicker" class="date-picker">
+                <button class="date-nav-btn" id="nextDateBtn">›</button>
+            </div>
+            <div class="journal-list" id="journalListDate"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}设置{% endblock %}
+
+{% block content %}
+<div class="settings">
+    <nav class="nav-bar">
+        <a href="/" class="back-btn">‹ 返回</a>
+        <h1>设置</h1>
+    </nav>
+    
+    <div class="settings-content">
+        <div class="settings-section">
+            <h2>日历同步</h2>
+            <div class="setting-item">
+                <label>
+                    <input type="checkbox" id="autoSync" name="autoSync">
+                    自动同步
+                </label>
+            </div>
+            <div class="setting-item">
+                <button class="btn btn-primary" id="manualSyncBtn">手动同步</button>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <h2>导出</h2>
+            <div class="setting-item">
+                <button class="btn btn-primary" id="exportAllBtn">导出所有日志</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
+
+
+
+

@@ -1,0 +1,34 @@
+# time-note-sync Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-11-17
+
+## Active Technologies
+- Python 3.11+ + Flask (web framework), caldav-library (CalDAV server), ics (iCalendar generation), Flask-SQLAlchemy (database ORM), SQLite (database), Vue.js (frontend framework), Vant (UI component library) (001-personal-journal-web)
+- SQLite database for journal entries and user data (001-personal-journal-web)
+- Python 3.11+ + Flask (web framework), caldav-library (CalDAV server), ics (iCalendar generation), Flask-SQLAlchemy (database ORM), SQLite (database), Jinja2 (template engine) (001-personal-journal-web)
+
+- Python 3.11+ + Flask (web framework), caldav-library (CalDAV server), ics (iCalendar generation), Flask-SQLAlchemy (database ORM), SQLite (database) (001-personal-journal-web)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] ruff check .
+
+## Code Style
+
+Python 3.11+: Follow standard conventions
+
+## Recent Changes
+- 001-personal-journal-web: Added Python 3.11+ + Flask (web framework), caldav-library (CalDAV server), ics (iCalendar generation), Flask-SQLAlchemy (database ORM), SQLite (database), Jinja2 (template engine)
+- 001-personal-journal-web: Added Python 3.11+ + Flask (web framework), caldav-library (CalDAV server), ics (iCalendar generation), Flask-SQLAlchemy (database ORM), SQLite (database), Jinja2 (template engine)
+- 001-personal-journal-web: Added Python 3.11+ + Flask (web framework), caldav-library (CalDAV server), ics (iCalendar generation), Flask-SQLAlchemy (database ORM), SQLite (database), Vue.js (frontend framework), Vant (UI component library)
+
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
