@@ -103,9 +103,39 @@ const AuthAPI = {
 const SyncAPI = {
     async sync() {
         const response = await fetch(`${API_BASE}/calendar/sync`, {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'same-origin'
         });
-        if (!response.ok) throw new Error('Sync failed');
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Sync failed' }));
+            throw new Error(error.error || 'Sync failed');
+        }
+        return response.json();
+    },
+
+    async syncEntry(entryId) {
+        const response = await fetch(`${API_BASE}/journal/entries/${entryId}/sync`, {
+            method: 'POST',
+            credentials: 'same-origin'
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Sync failed' }));
+            throw new Error(error.error || 'Sync failed');
+        }
+        return response.json();
+    },
+
+    async getSyncStatus() {
+        const response = await fetch(`${API_BASE}/calendar/events`, {
+            credentials: 'same-origin'
+        });
+        if (!response.ok) {
+            if (response.status === 401) {
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error('Failed to get sync status');
+        }
         return response.json();
     }
 };
@@ -280,13 +310,28 @@ async function loadJournalList(listId, date = null) {
             return;
         }
         
-        listElement.innerHTML = entries.map(entry => `
+        listElement.innerHTML = entries.map(entry => {
+            // Sync status indicator (T079)
+            let syncStatusIcon = '';
+            if (entry.sync_status === 'synced') {
+                syncStatusIcon = '<span class="sync-status synced" title="已同步">✓</span>';
+            } else if (entry.sync_status === 'sync_pending') {
+                syncStatusIcon = '<span class="sync-status pending" title="待同步">⏳</span>';
+            } else if (entry.sync_status === 'sync_error') {
+                syncStatusIcon = '<span class="sync-status error" title="同步失败">⚠</span>';
+            }
+            
+            return `
             <div class="journal-entry" onclick="window.location.href='/entry/${entry.id}'">
-                <div class="journal-entry-title">${entry.title || '无标题'}</div>
+                <div class="journal-entry-header">
+                    <div class="journal-entry-title">${entry.title || '无标题'}</div>
+                    ${syncStatusIcon}
+                </div>
                 <div class="journal-entry-date">${Utils.formatDate(entry.date)}</div>
                 <div class="journal-entry-content">${Utils.truncateText(entry.content || '')}</div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     } catch (error) {
         console.error('Error loading journal list:', error);
         listElement.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">加载失败: ${error.message}</div></div>`;

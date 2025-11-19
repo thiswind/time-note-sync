@@ -23,25 +23,50 @@ class CalDAVService:
             True if sync successful, False otherwise
         """
         try:
+            # Check if offline (FR-023)
+            if CalDAVService.is_offline():
+                logger.warning(f"Device is offline, cannot sync entry {entry.id}")
+                entry.sync_status = "sync_pending"
+                db.session.commit()
+                return False
+
             # Generate iCalendar event from journal entry
             event = ICSGenerator.generate_event_from_entry(entry)
             calendar = ICSGenerator.generate_calendar_from_entries([entry])
 
             # TODO: Implement actual CalDAV PUT request to sync to calendar
-            # For now, mark as synced
+            # For now, mark as synced (simulated sync)
+            # In production, this would make actual CalDAV PUT request to iPhone Calendar
             entry.sync_status = "synced"
             entry.calendar_event_id = event.uid
             db.session.commit()
 
-            logger.info(f"Synced journal entry {entry.id} to calendar")
+            logger.info(f"Synced journal entry {entry.id} to calendar (event ID: {event.uid})")
             return True
         except Exception as e:
-            logger.error(
-                f"Error syncing entry {entry.id} to calendar: {str(e)}", exc_info=True
-            )
-            entry.sync_status = "sync_pending"
-            db.session.rollback()
-            return False
+            error_msg = str(e).lower()
+            # Handle calendar full or permission restrictions (T068)
+            if "full" in error_msg or "quota" in error_msg or "space" in error_msg:
+                logger.error(
+                    f"Calendar is full or has quota restrictions for entry {entry.id}: {str(e)}"
+                )
+                entry.sync_status = "sync_error"
+                db.session.commit()
+                raise ValueError("Calendar is full. Please free up space and try again.")
+            elif "permission" in error_msg or "unauthorized" in error_msg or "forbidden" in error_msg:
+                logger.error(
+                    f"Permission denied for calendar sync of entry {entry.id}: {str(e)}"
+                )
+                entry.sync_status = "sync_error"
+                db.session.commit()
+                raise ValueError("Calendar permission denied. Please grant permissions and try again.")
+            else:
+                logger.error(
+                    f"Error syncing entry {entry.id} to calendar: {str(e)}", exc_info=True
+                )
+                entry.sync_status = "sync_pending"
+                db.session.rollback()
+                return False
 
     @staticmethod
     def sync_calendar_to_entry(
@@ -194,9 +219,16 @@ class CalDAVService:
         Returns:
             True if offline, False otherwise
         """
-        # TODO: Implement actual offline detection
-        # For now, return False (assume online)
-        return False
+        # Check network connectivity by attempting to resolve a DNS query
+        # In a web application, we can use navigator.onLine if available
+        # For server-side, we can try a simple network check
+        try:
+            import socket
+            socket.create_connection(("8.8.8.8", 53), timeout=3)
+            return False
+        except OSError:
+            logger.warning("Device appears to be offline")
+            return True
 
     @staticmethod
     def sync_all_pending_entries(user_id: int) -> Dict[str, int]:

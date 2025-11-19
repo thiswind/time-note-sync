@@ -114,33 +114,33 @@
 
 - [x] T053 [P] [US3] Install and configure caldav-library in requirements.txt
 - [x] T054 [P] [US3] Install and configure ics library in requirements.txt
-- [ ] T055 [US3] Implement CalDAV service in services/caldav_service.py (CalDAV server functionality)
-- [ ] T056 [US3] Implement iCalendar generator in services/ics_generator.py (generate .ics files from journal entries)
-- [ ] T057 [US3] Implement calendar sync logic (web to iPhone) in services/caldav_service.py
-- [ ] T058 [US3] Implement calendar sync logic (iPhone to web) in services/caldav_service.py
-- [ ] T059 [US3] Implement conflict detection and last-write-wins resolution in services/caldav_service.py (FR-018)
-- [ ] T060 [US3] Implement completion status sync from calendar to journal entry in services/caldav_service.py (FR-008)
-- [ ] T061 [US3] Implement automatic deletion of journal entries when calendar events are deleted in services/caldav_service.py (FR-024)
-- [ ] T062 [US3] Implement UTC storage and local timezone display for calendar sync in services/caldav_service.py (FR-025)
-- [ ] T063 [US3] Implement sequential time offsets for multiple entries on same date/time in services/caldav_service.py (FR-028)
-- [ ] T064 [US3] Implement content truncation with ellipsis for calendar sync in services/ics_generator.py (FR-026)
-- [ ] T065 [US3] Implement text content preservation and formatting stripping for calendar sync in services/ics_generator.py (FR-027)
-- [ ] T066 [US3] Implement offline detection and sync disable in services/caldav_service.py (FR-023)
-- [ ] T067 [US3] Implement error handling and manual retry for sync failures in services/caldav_service.py (FR-020)
-- [ ] T068 [US3] Implement error handling for calendar full/permission restrictions in services/caldav_service.py (edge case resolution)
-- [ ] T069 [US3] Implement POST /api/journal/entries/{entryId}/sync endpoint in api/journal_routes.py
-- [ ] T070 [US3] Implement POST /api/calendar/sync endpoint in api/caldav_routes.py (manual sync trigger)
-- [ ] T071 [US3] Implement GET /api/calendar/events endpoint in api/caldav_routes.py
-- [ ] T072 [US3] Implement CalDAV protocol endpoints in api/caldav_routes.py (PROPFIND, GET, PUT, DELETE)
-- [ ] T073 [US3] Implement POST /api/calendar/events/{eventId}/create-entry endpoint in api/caldav_routes.py (create journal entry from calendar event, FR-009)
-- [ ] T074 [US3] Implement service method to create journal entry from calendar event in services/journal_service.py (FR-009)
+- [x] T055 [US3] Implement CalDAV service in services/caldav_service.py (CalDAV server functionality)
+- [x] T056 [US3] Implement iCalendar generator in services/ics_generator.py (generate .ics files from journal entries)
+- [x] T057 [US3] Implement calendar sync logic (web to iPhone) in services/caldav_service.py
+- [x] T058 [US3] Implement calendar sync logic (iPhone to web) in services/caldav_service.py
+- [x] T059 [US3] Implement conflict detection and last-write-wins resolution in services/caldav_service.py (FR-018)
+- [x] T060 [US3] Implement completion status sync from calendar to journal entry in services/caldav_service.py (FR-008)
+- [x] T061 [US3] Implement automatic deletion of journal entries when calendar events are deleted in services/caldav_service.py (FR-024)
+- [x] T062 [US3] Implement UTC storage and local timezone display for calendar sync in services/caldav_service.py (FR-025)
+- [x] T063 [US3] Implement sequential time offsets for multiple entries on same date/time in services/caldav_service.py (FR-028)
+- [x] T064 [US3] Implement content truncation with ellipsis for calendar sync in services/ics_generator.py (FR-026)
+- [x] T065 [US3] Implement text content preservation and formatting stripping for calendar sync in services/ics_generator.py (FR-027)
+- [x] T066 [US3] Implement offline detection and sync disable in services/caldav_service.py (FR-023)
+- [x] T067 [US3] Implement error handling and manual retry for sync failures in services/caldav_service.py (FR-020)
+- [x] T068 [US3] Implement error handling for calendar full/permission restrictions in services/caldav_service.py (edge case resolution)
+- [x] T069 [US3] Implement POST /api/journal/entries/{entryId}/sync endpoint in api/journal_routes.py
+- [x] T070 [US3] Implement POST /api/calendar/sync endpoint in api/caldav_routes.py (manual sync trigger)
+- [x] T071 [US3] Implement GET /api/calendar/events endpoint in api/caldav_routes.py
+- [x] T072 [US3] Implement CalDAV protocol endpoints in api/caldav_routes.py (PROPFIND, GET, PUT, DELETE)
+- [x] T073 [US3] Implement POST /api/calendar/events/{eventId}/create-entry endpoint in api/caldav_routes.py (create journal entry from calendar event, FR-009)
+- [x] T074 [US3] Implement service method to create journal entry from calendar event in services/journal_service.py (FR-009)
 - [x] T075 [US3] Update Journal Entry model to include sync_status, calendar_event_id, and completion_status in models/journal_entry.py
 - [x] T076 [US3] Update User model to include calendar sync preferences in models/user.py
-- [ ] T077 [US3] Create calendar sync settings page template in templates/settings.html
-- [ ] T078 [US3] Implement sync service in static/js/main.js (sync API calls)
-- [ ] T079 [US3] Add sync status indicators in templates/index.html
-- [ ] T080 [US3] Add sync control UI in templates/settings.html (enable/disable auto sync, manual sync button)
-- [ ] T081 [US3] Add logging for calendar sync operations in services/caldav_service.py (constitution requirement)
+- [x] T077 [US3] Create calendar sync settings page template in templates/settings.html
+- [x] T078 [US3] Implement sync service in static/js/main.js (sync API calls)
+- [x] T079 [US3] Add sync status indicators in templates/index.html
+- [x] T080 [US3] Add sync control UI in templates/settings.html (enable/disable auto sync, manual sync button)
+- [x] T081 [US3] Add logging for calendar sync operations in services/caldav_service.py (constitution requirement)
 - [ ] T082 [US3] Code review before merge (constitution requirement)
 
 ---

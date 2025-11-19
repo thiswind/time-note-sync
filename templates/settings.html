@@ -13,13 +13,18 @@
         <div class="settings-section">
             <h2>日历同步</h2>
             <div class="setting-item">
-                <label>
+                <label class="setting-label">
                     <input type="checkbox" id="autoSync" name="autoSync">
-                    自动同步
+                    <span>自动同步</span>
                 </label>
+                <p class="setting-description">启用后，日志条目将自动同步到 iPhone 日历</p>
             </div>
             <div class="setting-item">
                 <button class="btn btn-primary" id="manualSyncBtn">手动同步</button>
+                <p class="setting-description">立即同步所有待同步的日志条目</p>
+            </div>
+            <div class="setting-item" id="syncStatus" style="display: none;">
+                <div class="sync-status-message" id="syncStatusMessage"></div>
             </div>
         </div>
         
@@ -35,6 +40,7 @@
 
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script src="{{ url_for('static', filename='js/components/settings.js') }}"></script>
 {% endblock %}
 
 
