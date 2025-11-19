@@ -4,7 +4,7 @@ const { defineConfig, devices } = require('@playwright/test');
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-module.exports = defineConfig({
+const config = {
   testDir: './tests/e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -16,16 +16,20 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
+  /* Global timeout for each test */
+  timeout: 30000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://localhost:5001',
+    baseURL: process.env.VERCEL_URL || 'http://localhost:5001',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     /* Screenshot on failure */
     screenshot: 'only-on-failure',
     /* Video on failure */
     video: 'retain-on-failure',
+    /* Navigation timeout */
+    navigationTimeout: 30000,
   },
 
   /* Configure projects for major browsers */
@@ -35,9 +39,11 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+};
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
+// Only add webServer config when NOT using VERCEL_URL
+if (!process.env.VERCEL_URL) {
+  config.webServer = {
     command: 'python3 app.py',
     url: 'http://localhost:5001/health',
     reuseExistingServer: !process.env.CI,
@@ -48,6 +54,8 @@ module.exports = defineConfig({
       FLASK_ENV: 'development',
       PORT: '5001',
     },
-  },
-});
+  };
+}
+
+module.exports = defineConfig(config);
 

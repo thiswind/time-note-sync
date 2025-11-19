@@ -209,7 +209,12 @@ The application is configured for deployment on Vercel. See `vercel.json` for de
    npm install -g vercel
    ```
 
-2. **Deploy**:
+2. **Deploy to Production**:
+   ```bash
+   vercel --prod
+   ```
+
+   Or deploy to preview:
    ```bash
    vercel
    ```
@@ -218,6 +223,12 @@ The application is configured for deployment on Vercel. See `vercel.json` for de
    - `SECRET_KEY`: A secure random string for Flask sessions
    - `FLASK_ENV`: `production`
    - `DATABASE_URL`: Your production database URL (if using external database)
+   - `CALDAV_SERVER_URL`: Your CalDAV server URL (optional, for calendar sync)
+
+4. **Verify Deployment**:
+   - Check deployment logs: `vercel inspect <deployment-url> --logs`
+   - Test health endpoint: `curl https://your-app.vercel.app/health`
+   - Verify dependencies are installed correctly
 
 ### Production Considerations
 
@@ -226,6 +237,89 @@ The application is configured for deployment on Vercel. See `vercel.json` for de
 - **Secret Key**: Use a strong, randomly generated secret key in production
 - **Logging**: Configure appropriate log levels for production
 - **CalDAV Server**: Configure CalDAV server URL in environment variables
+- **Dependencies**: Ensure `pyproject.toml` contains all required dependencies (Vercel uses this for Python dependency installation)
+
+### Deployment Checklist
+
+Before deploying to production, ensure:
+
+- [ ] All dependencies are listed in `pyproject.toml` (Vercel uses this for dependency installation)
+- [ ] `requirements.txt` is present and up-to-date (fallback for dependency installation)
+- [ ] `runtime.txt` specifies Python version (optional, defaults to latest)
+- [ ] Environment variables are configured in Vercel dashboard
+- [ ] Database is initialized (run `init_db.py` or configure external database)
+- [ ] All tests pass locally
+- [ ] Build completes successfully (`vercel build`)
+- [ ] Health endpoint responds correctly (`/health`)
+- [ ] Application loads without errors
+
+## Usage
+
+### First-Time Setup
+
+1. **Access the Application**:
+   - Navigate to your deployed Vercel URL
+   - You will be redirected to the login page
+
+2. **Create an Account**:
+   - If no users exist, you may need to create one via the database initialization script:
+     ```bash
+     python init_db.py
+     ```
+   - Or use the API to create a user (if implemented)
+
+3. **Log In**:
+   - Enter your username and password
+   - You will be redirected to the home page
+
+### Creating Journal Entries
+
+1. Click "New Entry" button on the home page
+2. Enter a title (optional - defaults to "Untitled" if empty)
+3. Enter content
+4. Select a date (defaults to today)
+5. Click "Save"
+
+### Browsing Entries by Date
+
+1. Use the date picker to select a specific date
+2. Navigate between dates using previous/next buttons
+3. View entries for the selected date
+
+### Calendar Sync
+
+1. **Enable Sync**:
+   - Go to Settings page
+   - Enable "Auto Sync" or use manual sync
+   - Configure CalDAV server URL (if required)
+
+2. **Sync Entry**:
+   - Create or edit a journal entry
+   - If auto-sync is enabled, it will sync automatically
+   - Or click "Sync" button to manually sync
+
+3. **View in iPhone Calendar**:
+   - Open iPhone Calendar app
+   - Navigate to the entry date
+   - The synced event should appear
+
+### Export to iPhone Notes
+
+1. **Single Entry Export**:
+   - Open a journal entry
+   - Click "Export to Notes" button
+   - Confirm export
+   - Open iPhone Notes app to view the exported note
+
+2. **Batch Export**:
+   - Select multiple entries using checkboxes
+   - Click "Export Selected" button
+   - All selected entries will be exported to Notes
+
+### Quick Access to Native Apps
+
+- **Open in Calendar**: Click "Open in Calendar" link on an entry detail page
+- **Open in Notes**: Click "Open in Notes" link on an entry detail page
 
 ## Security & Privacy
 

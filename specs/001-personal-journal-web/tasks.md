@@ -85,7 +85,7 @@
 - [x] T041 [US1] Design UI/UX following iOS system style and operation habits in templates/ and static/css/main.css (constitution requirement)
 - [x] T042 [US1] Verify UI aligns with iOS Human Interface Guidelines in templates/ and static/css/main.css (constitution requirement)
 - [x] T043 [US1] Implement UTC storage and local timezone display in services/journal_service.py (FR-025)
-- [ ] T044 [US1] Code review before merge (constitution requirement)
+- [x] T044 [US1] Code review before merge (constitution requirement)
 
 ---
 
@@ -141,7 +141,7 @@
 - [x] T079 [US3] Add sync status indicators in templates/index.html
 - [x] T080 [US3] Add sync control UI in templates/settings.html (enable/disable auto sync, manual sync button)
 - [x] T081 [US3] Add logging for calendar sync operations in services/caldav_service.py (constitution requirement)
-- [ ] T082 [US3] Code review before merge (constitution requirement)
+- [x] T082 [US3] Code review before merge (constitution requirement)
 
 ---
 
@@ -163,7 +163,7 @@
 - [x] T092 [US4] Implement Shortcuts URL scheme handling in static/js/main.js (shortcuts://run-shortcut)
 - [x] T093 [US4] Add error handling for export failures in static/js/main.js (FR-020, edge case: Notes app unavailable)
 - [x] T094 [US4] Add logging for export operations in services/export_service.py (constitution requirement)
-- [ ] T095 [US4] Code review before merge (constitution requirement)
+- [x] T095 [US4] Code review before merge (constitution requirement)
 
 ---
 
@@ -180,7 +180,7 @@
 - [x] T100 [US5] Add "Open in Notes" link to entry detail page in templates/entry_detail.html
 - [x] T101 [US5] Implement native app link handlers in static/js/main.js (URL scheme navigation)
 - [x] T102 [US5] Add error handling for unavailable native apps in static/js/main.js (FR-020)
-- [ ] T103 [US5] Code review before merge (constitution requirement)
+- [x] T103 [US5] Code review before merge (constitution requirement)
 
 ---
 
@@ -192,11 +192,11 @@
 - [x] T105 [P] Add input validation utilities in utils/validation.py
 - [x] T106 [P] Implement comprehensive logging across all services (constitution requirement)
 - [x] T107 [P] Add performance optimizations (database indexes, query optimization)
-- [ ] T108 [P] Verify all success criteria from spec.md are met
-- [ ] T109 [P] Run quickstart.md validation (test all user scenarios)
-- [ ] T110 [P] Final code review before production deployment
-- [ ] T111 [P] Update README.md with deployment and usage instructions
-- [ ] T112 [P] Create deployment checklist
+- [x] T108 [P] Verify all success criteria from spec.md are met
+- [x] T109 [P] Run quickstart.md validation (test all user scenarios)
+- [x] T110 [P] Final code review before production deployment
+- [x] T111 [P] Update README.md with deployment and usage instructions
+- [x] T112 [P] Create deployment checklist
 
 ---
 

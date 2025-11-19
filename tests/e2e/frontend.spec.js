@@ -1,7 +1,8 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 
-const BASE_URL = 'http://localhost:5001';
+// Use local server by default, Vercel URL only when explicitly set
+const BASE_URL = process.env.VERCEL_URL || 'http://localhost:5001';
 const TEST_USER = {
   username: 'testuser',
   password: 'testpass'
@@ -10,7 +11,7 @@ const TEST_USER = {
 test.describe('Frontend E2E Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the app
-    await page.goto(BASE_URL);
+    await page.goto(BASE_URL, { waitUntil: 'networkidle', timeout: 30000 });
   });
 
   test('should load login page', async ({ page }) => {
