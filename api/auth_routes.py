@@ -69,15 +69,21 @@ def logout():
 @auth_bp.route("/status", methods=["GET"])
 def status():
     """Check authentication status."""
-    if current_user.is_authenticated:
-        return (
-            jsonify(
-                {
-                    "authenticated": True,
-                    "user": {"id": current_user.id, "username": current_user.username},
-                }
-            ),
-            200,
-        )
-    else:
-        return jsonify({"authenticated": False}), 200
+    try:
+        if current_user.is_authenticated:
+            logger.debug(f"Authentication status check: user {current_user.id} is authenticated")
+            return (
+                jsonify(
+                    {
+                        "authenticated": True,
+                        "user": {"id": current_user.id, "username": current_user.username},
+                    }
+                ),
+                200,
+            )
+        else:
+            logger.debug("Authentication status check: user is not authenticated")
+            return jsonify({"authenticated": False}), 200
+    except Exception as e:
+        logger.error(f"Error checking authentication status: {str(e)}", exc_info=True)
+        return jsonify({"error": "Internal server error"}), 500

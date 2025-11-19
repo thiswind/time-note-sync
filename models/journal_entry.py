@@ -11,19 +11,19 @@ class JournalEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer, db.ForeignKey("users.id"), nullable=False, index=True
-    )
+    )  # Indexed for user-based queries (T107)
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    date = db.Column(db.Date, nullable=False, index=True)
+    date = db.Column(db.Date, nullable=False, index=True)  # Indexed for date-based queries (T107)
 
     # Calendar sync fields
-    calendar_event_id = db.Column(db.String(255), nullable=True, index=True)
+    calendar_event_id = db.Column(db.String(255), nullable=True, index=True)  # Indexed for calendar sync queries (T107)
     sync_status = db.Column(
         db.String(20),
         default="not_synced",
         nullable=False,
         index=True,
-    )  # 'not_synced', 'synced', 'sync_pending', 'sync_conflict'
+    )  # 'not_synced', 'synced', 'sync_pending', 'sync_conflict' - Indexed for sync status queries (T107)
     completion_status = db.Column(
         db.String(20), nullable=True
     )  # 'not_started', 'in_progress', 'completed', 'cancelled'
