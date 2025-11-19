@@ -104,9 +104,15 @@ class JournalService:
             .all()
         )
 
-        logger.info(
-            f"Retrieved {len(entries)} journal entries for user {user_id} (date: {entry_date}, total: {total})"
-        )
+        # Log date-based browsing operations (T050)
+        if entry_date:
+            logger.info(
+                f"Date-based browsing: Retrieved {len(entries)} journal entries for user {user_id} on date {entry_date} (total: {total})"
+            )
+        else:
+            logger.info(
+                f"Retrieved {len(entries)} journal entries for user {user_id} (date: {entry_date}, total: {total})"
+            )
         return {"entries": entries, "total": total}
 
     @staticmethod

@@ -192,10 +192,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadJournalList('today', today);
             } else if (tab === 'date') {
                 const datePicker = document.getElementById('datePicker');
-                if (datePicker && !datePicker.value) {
-                    datePicker.value = new Date().toISOString().split('T')[0];
+                if (datePicker) {
+                    // Initialize date picker to today if not set
+                    if (!datePicker.value) {
+                        datePicker.value = new Date().toISOString().split('T')[0];
+                    }
+                    // Load entries for selected date
+                    loadJournalList('date', datePicker.value);
                 }
-                loadJournalList('date', datePicker.value);
             }
         });
     });
@@ -261,7 +265,18 @@ async function loadJournalList(listId, date = null) {
         const entries = await JournalAPI.listEntries(date);
         
         if (!entries || entries.length === 0) {
-            listElement.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div class="empty-state-text">暂无日志</div></div>';
+            // Show appropriate empty state message based on context
+            let emptyMessage = '<div class="empty-state"><div class="empty-state-icon">📝</div><div class="empty-state-text">暂无日志</div>';
+            
+            if (listId === 'date' && date) {
+                const formattedDate = Utils.formatDate(date);
+                emptyMessage += `<div class="empty-state-date">${formattedDate} 没有日志条目</div>`;
+            } else if (listId === 'today') {
+                emptyMessage += '<div class="empty-state-date">今天还没有创建日志</div>';
+            }
+            
+            emptyMessage += '</div>';
+            listElement.innerHTML = emptyMessage;
             return;
         }
         
@@ -273,7 +288,8 @@ async function loadJournalList(listId, date = null) {
             </div>
         `).join('');
     } catch (error) {
-        listElement.innerHTML = `<div class="empty-state">加载失败: ${error.message}</div>`;
+        console.error('Error loading journal list:', error);
+        listElement.innerHTML = `<div class="empty-state"><div class="empty-state-icon">⚠️</div><div class="empty-state-text">加载失败: ${error.message}</div></div>`;
     }
 }
 

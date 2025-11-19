@@ -107,6 +107,79 @@ body {
     display: none;
 }
 
+/* Date Navigation */
+.date-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: var(--ios-white);
+    border-bottom: 0.5px solid var(--ios-separator);
+}
+
+.date-nav-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--ios-blue);
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.date-nav-btn:hover {
+    background-color: var(--ios-light-gray);
+}
+
+.date-nav-btn:active {
+    background-color: var(--ios-separator);
+}
+
+.date-picker {
+    flex: 1;
+    max-width: 200px;
+    padding: 10px 16px;
+    font-size: 17px;
+    border: 1px solid var(--ios-separator);
+    border-radius: 8px;
+    background-color: var(--ios-white);
+    color: var(--ios-dark-gray);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.date-picker:focus {
+    outline: none;
+    border-color: var(--ios-blue);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ios-gray);
+}
+
+.empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.empty-state-text {
+    font-size: 17px;
+    color: var(--ios-gray);
+    margin-top: 8px;
+}
+
+.empty-state-date {
+    font-size: 15px;
+    color: var(--ios-gray);
+    margin-top: 8px;
+    font-style: italic;
+}
+
 /* Forms */
 .form-group {
     margin-bottom: 16px;

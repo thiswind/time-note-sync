@@ -95,13 +95,13 @@
 
 **Independent Test**: Create multiple entries on different dates and verify they can be accessed through date-based navigation. This delivers the ability to review past entries.
 
-- [ ] T045 [US2] Add date filtering to GET /api/journal/entries endpoint in api/journal_routes.py (query parameter: date)
-- [ ] T046 [US2] Implement date-based query logic in services/journal_service.py (filter by date, support date range)
-- [ ] T047 [US2] Add date picker UI component in templates/index.html (iOS calendar interface patterns)
-- [ ] T048 [US2] Implement date navigation in static/js/main.js (previous/next date, date selection)
-- [ ] T049 [US2] Add empty state message for dates with no entries in templates/index.html
-- [ ] T050 [US2] Add logging for date-based browsing operations in services/journal_service.py
-- [ ] T051 [US2] Implement date-based entry filtering in static/js/main.js
+- [x] T045 [US2] Add date filtering to GET /api/journal/entries endpoint in api/journal_routes.py (query parameter: date)
+- [x] T046 [US2] Implement date-based query logic in services/journal_service.py (filter by date, support date range)
+- [x] T047 [US2] Add date picker UI component in templates/index.html (iOS calendar interface patterns)
+- [x] T048 [US2] Implement date navigation in static/js/main.js (previous/next date, date selection)
+- [x] T049 [US2] Add empty state message for dates with no entries in templates/index.html
+- [x] T050 [US2] Add logging for date-based browsing operations in services/journal_service.py
+- [x] T051 [US2] Implement date-based entry filtering in static/js/main.js
 - [ ] T052 [US2] Code review before merge (constitution requirement)
 
 ---
