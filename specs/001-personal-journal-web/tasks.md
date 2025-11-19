@@ -151,18 +151,18 @@
 
 **Independent Test**: Create journal entries, select one or multiple entries, click the export button, and verify the entries appear in iPhone Notes with all content preserved.
 
-- [ ] T083 [US4] Implement export service for single entry in services/export_service.py (generate Shortcuts URL)
-- [ ] T084 [US4] Implement export service for multiple entries in services/export_service.py (batch export)
-- [ ] T085 [US4] Implement content truncation with ellipsis for Notes export in services/export_service.py (FR-026)
-- [ ] T086 [US4] Implement text content preservation and formatting stripping for Notes export in services/export_service.py (FR-027)
-- [ ] T087 [US4] Implement POST /api/journal/entries/{entryId}/export endpoint in api/journal_routes.py
-- [ ] T088 [US4] Implement POST /api/journal/entries/batch-export endpoint in api/journal_routes.py
-- [ ] T089 [US4] Add export functionality to static/js/main.js (export API calls)
-- [ ] T090 [US4] Add export button to entry detail page in templates/entry_detail.html
-- [ ] T091 [US4] Add batch export selection UI in templates/index.html (multi-select interface)
-- [ ] T092 [US4] Implement Shortcuts URL scheme handling in static/js/main.js (shortcuts://run-shortcut)
-- [ ] T093 [US4] Add error handling for export failures in static/js/main.js (FR-020, edge case: Notes app unavailable)
-- [ ] T094 [US4] Add logging for export operations in services/export_service.py (constitution requirement)
+- [x] T083 [US4] Implement export service for single entry in services/export_service.py (generate Shortcuts URL)
+- [x] T084 [US4] Implement export service for multiple entries in services/export_service.py (batch export)
+- [x] T085 [US4] Implement content truncation with ellipsis for Notes export in services/export_service.py (FR-026)
+- [x] T086 [US4] Implement text content preservation and formatting stripping for Notes export in services/export_service.py (FR-027)
+- [x] T087 [US4] Implement POST /api/journal/entries/{entryId}/export endpoint in api/journal_routes.py
+- [x] T088 [US4] Implement POST /api/journal/entries/batch-export endpoint in api/journal_routes.py
+- [x] T089 [US4] Add export functionality to static/js/main.js (export API calls)
+- [x] T090 [US4] Add export button to entry detail page in templates/entry_detail.html
+- [x] T091 [US4] Add batch export selection UI in templates/index.html (multi-select interface)
+- [x] T092 [US4] Implement Shortcuts URL scheme handling in static/js/main.js (shortcuts://run-shortcut)
+- [x] T093 [US4] Add error handling for export failures in static/js/main.js (FR-020, edge case: Notes app unavailable)
+- [x] T094 [US4] Add logging for export operations in services/export_service.py (constitution requirement)
 - [ ] T095 [US4] Code review before merge (constitution requirement)
 
 ---

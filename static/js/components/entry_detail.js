@@ -140,12 +140,22 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const result = await ExportAPI.exportEntry(entryId);
             if (result.shortcuts_url) {
-                window.location.href = result.shortcuts_url;
+                // Handle Shortcuts URL scheme (T092)
+                ExportAPI.openShortcuts(result.shortcuts_url);
+                // Show success message after a delay
+                setTimeout(() => {
+                    alert('导出成功！如果 Shortcuts 应用未打开，请检查是否已安装 Shortcuts 应用。');
+                }, 500);
             } else {
                 alert('导出成功');
             }
         } catch (error) {
-            alert('导出失败: ' + error.message);
+            // Error handling for export failures (T093)
+            let errorMessage = '导出失败: ' + error.message;
+            if (error.message.includes('Shortcuts') || error.message.includes('Notes')) {
+                errorMessage += '\n\n请确保：\n1. 已安装 Shortcuts 应用\n2. 已创建 "AddToNotes" Shortcut';
+            }
+            alert(errorMessage);
         } finally {
             exportBtn.disabled = false;
             exportBtn.textContent = '↗';

@@ -91,6 +91,7 @@ class ExportService:
         Returns:
             Shortcuts URL
         """
+        logger.info(f"Exporting single journal entry {entry.id} to Notes")
         return ExportService.generate_shortcuts_url([entry])
 
     @staticmethod
@@ -107,5 +108,7 @@ class ExportService:
         if not entries:
             raise ValueError("No entries to export")
 
+        entry_ids = [entry.id for entry in entries]
+        logger.info(f"Exporting {len(entries)} journal entries ({entry_ids}) to Notes")
         return ExportService.generate_shortcuts_url(entries)
 

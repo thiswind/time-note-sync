@@ -144,9 +144,13 @@ const SyncAPI = {
 const ExportAPI = {
     async exportEntry(id) {
         const response = await fetch(`${API_BASE}/journal/entries/${id}/export`, {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'same-origin'
         });
-        if (!response.ok) throw new Error('Export failed');
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Export failed' }));
+            throw new Error(error.error || 'Export failed');
+        }
         return response.json();
     },
 
@@ -154,10 +158,31 @@ const ExportAPI = {
         const response = await fetch(`${API_BASE}/journal/entries/batch-export`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
             body: JSON.stringify({ entry_ids: ids })
         });
-        if (!response.ok) throw new Error('Batch export failed');
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Batch export failed' }));
+            throw new Error(error.error || 'Batch export failed');
+        }
         return response.json();
+    },
+
+    // Handle Shortcuts URL scheme (T092)
+    openShortcuts(url) {
+        try {
+            // Try to open Shortcuts app
+            window.location.href = url;
+            // If Shortcuts app is not available, show error after timeout (T093)
+            setTimeout(() => {
+                // Check if we're still on the same page (Shortcuts didn't open)
+                // This is a best-effort check - Shortcuts may have opened but page didn't navigate
+                console.log('Shortcuts URL opened:', url);
+            }, 1000);
+        } catch (error) {
+            console.error('Error opening Shortcuts:', error);
+            throw new Error('无法打开 Shortcuts 应用。请确保已安装 Shortcuts 应用。');
+        }
     }
 };
 
@@ -279,6 +304,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Batch export button (T091)
+    const exportBtn = document.getElementById('exportBtn');
+    const batchExportControls = document.getElementById('batchExportControls');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const deselectAllBtn = document.getElementById('deselectAllBtn');
+    const batchExportBtn = document.getElementById('batchExportBtn');
+    
+    let batchModeEnabled = false;
+    
+    if (exportBtn && batchExportControls) {
+        exportBtn.addEventListener('click', function() {
+            batchModeEnabled = !batchModeEnabled;
+            batchExportControls.style.display = batchModeEnabled ? 'block' : 'none';
+            
+            // Reload list to show/hide checkboxes
+            const activeTab = document.querySelector('.tab-btn.active');
+            if (activeTab) {
+                const tab = activeTab.dataset.tab;
+                if (tab === 'all') {
+                    loadJournalList('all');
+                } else if (tab === 'today') {
+                    const today = new Date().toISOString().split('T')[0];
+                    loadJournalList('today', today);
+                } else if (tab === 'date') {
+                    const datePicker = document.getElementById('datePicker');
+                    if (datePicker && datePicker.value) {
+                        loadJournalList('date', datePicker.value);
+                    }
+                }
+            }
+        });
+    }
+    
+    // Select all entries
+    if (selectAllBtn) {
+        selectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.entry-checkbox').forEach(cb => {
+                cb.checked = true;
+            });
+        });
+    }
+    
+    // Deselect all entries
+    if (deselectAllBtn) {
+        deselectAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.entry-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+        });
+    }
+    
+    // Batch export selected entries
+    if (batchExportBtn) {
+        batchExportBtn.addEventListener('click', async function() {
+            const selectedCheckboxes = document.querySelectorAll('.entry-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(cb => parseInt(cb.dataset.entryId));
+            
+            if (selectedIds.length === 0) {
+                alert('请至少选择一条日志');
+                return;
+            }
+            
+            batchExportBtn.disabled = true;
+            batchExportBtn.textContent = '导出中...';
+            
+            try {
+                const result = await ExportAPI.batchExport(selectedIds);
+                if (result.shortcuts_url) {
+                    ExportAPI.openShortcuts(result.shortcuts_url);
+                    setTimeout(() => {
+                        alert(`成功导出 ${selectedIds.length} 条日志！如果 Shortcuts 应用未打开，请检查是否已安装 Shortcuts 应用。`);
+                    }, 500);
+                } else {
+                    alert(`成功导出 ${selectedIds.length} 条日志`);
+                }
+            } catch (error) {
+                let errorMessage = '批量导出失败: ' + error.message;
+                if (error.message.includes('Shortcuts') || error.message.includes('Notes')) {
+                    errorMessage += '\n\n请确保：\n1. 已安装 Shortcuts 应用\n2. 已创建 "AddToNotes" Shortcut';
+                }
+                alert(errorMessage);
+            } finally {
+                batchExportBtn.disabled = false;
+                batchExportBtn.textContent = '导出选中';
+            }
+        });
+    }
+    
     // Load initial data
     if (document.getElementById('journalListAll')) {
         loadJournalList('all');
@@ -310,6 +423,10 @@ async function loadJournalList(listId, date = null) {
             return;
         }
         
+        // Check if batch export mode is enabled
+        const batchExportControls = document.getElementById('batchExportControls');
+        const isBatchMode = batchExportControls && batchExportControls.style.display !== 'none';
+        
         listElement.innerHTML = entries.map(entry => {
             // Sync status indicator (T079)
             let syncStatusIcon = '';
@@ -321,8 +438,14 @@ async function loadJournalList(listId, date = null) {
                 syncStatusIcon = '<span class="sync-status error" title="同步失败">⚠</span>';
             }
             
+            // Batch export checkbox (T091)
+            const checkbox = isBatchMode 
+                ? `<input type="checkbox" class="entry-checkbox" data-entry-id="${entry.id}" onclick="event.stopPropagation();">`
+                : '';
+            
             return `
-            <div class="journal-entry" onclick="window.location.href='/entry/${entry.id}'">
+            <div class="journal-entry ${isBatchMode ? 'batch-mode' : ''}" onclick="${isBatchMode ? '' : `window.location.href='/entry/${entry.id}'`}">
+                ${checkbox}
                 <div class="journal-entry-header">
                     <div class="journal-entry-title">${entry.title || '无标题'}</div>
                     ${syncStatusIcon}

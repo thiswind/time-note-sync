@@ -260,6 +260,10 @@ def export_entry(entry_id):
 
         return jsonify({"shortcuts_url": shortcuts_url}), 200
 
+    except ValueError as e:
+        # Handle specific export errors (T093)
+        logger.warning(f"Export validation error for entry {entry_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         logger.error(
             f"Error exporting journal entry {entry_id}: {str(e)}", exc_info=True
@@ -296,6 +300,10 @@ def batch_export_entries():
 
         return jsonify({"shortcuts_url": shortcuts_url}), 200
 
+    except ValueError as e:
+        # Handle specific export errors (T093)
+        logger.warning(f"Batch export validation error: {str(e)}")
+        return jsonify({"error": str(e)}), 400
     except Exception as e:
         logger.error(f"Error batch exporting entries: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
