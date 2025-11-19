@@ -112,8 +112,8 @@
 
 **Independent Test**: Create a journal entry, sync it to iPhone Calendar (automatically or manually), verify it appears in the calendar, then modify it in the calendar (e.g., marking as complete, adding notes) and verify the change syncs back to the web application.
 
-- [ ] T053 [P] [US3] Install and configure caldav-library in requirements.txt
-- [ ] T054 [P] [US3] Install and configure ics library in requirements.txt
+- [x] T053 [P] [US3] Install and configure caldav-library in requirements.txt
+- [x] T054 [P] [US3] Install and configure ics library in requirements.txt
 - [ ] T055 [US3] Implement CalDAV service in services/caldav_service.py (CalDAV server functionality)
 - [ ] T056 [US3] Implement iCalendar generator in services/ics_generator.py (generate .ics files from journal entries)
 - [ ] T057 [US3] Implement calendar sync logic (web to iPhone) in services/caldav_service.py
@@ -134,8 +134,8 @@
 - [ ] T072 [US3] Implement CalDAV protocol endpoints in api/caldav_routes.py (PROPFIND, GET, PUT, DELETE)
 - [ ] T073 [US3] Implement POST /api/calendar/events/{eventId}/create-entry endpoint in api/caldav_routes.py (create journal entry from calendar event, FR-009)
 - [ ] T074 [US3] Implement service method to create journal entry from calendar event in services/journal_service.py (FR-009)
-- [ ] T075 [US3] Update Journal Entry model to include sync_status, calendar_event_id, and completion_status in models/journal_entry.py
-- [ ] T076 [US3] Update User model to include calendar sync preferences in models/user.py
+- [x] T075 [US3] Update Journal Entry model to include sync_status, calendar_event_id, and completion_status in models/journal_entry.py
+- [x] T076 [US3] Update User model to include calendar sync preferences in models/user.py
 - [ ] T077 [US3] Create calendar sync settings page template in templates/settings.html
 - [ ] T078 [US3] Implement sync service in static/js/main.js (sync API calls)
 - [ ] T079 [US3] Add sync status indicators in templates/index.html
