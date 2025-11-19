@@ -153,36 +153,78 @@ test.describe('Frontend E2E Tests', () => {
   });
 
   test('should display journal entries list after login', async ({ page }) => {
+    // Navigate to login page first
+    await page.goto('/login', { waitUntil: 'networkidle', timeout: 30000 });
+    
     // Login first
     const usernameInput = page.locator('input[name="username"], input[placeholder*="用户名"]').first();
     const passwordInput = page.locator('input[type="password"], input[name="password"]').first();
     const loginButton = page.locator('button:has-text("登录"), button[type="submit"]').first();
     
+    await expect(usernameInput).toBeVisible({ timeout: 5000 });
+    await expect(passwordInput).toBeVisible();
+    await expect(loginButton).toBeVisible();
+    
     await usernameInput.fill(TEST_USER.username);
     await passwordInput.fill(TEST_USER.password);
     
-    await Promise.all([
-      page.waitForURL('**/', { timeout: 10000 }).catch(() => {}),
-      page.waitForResponse(response => response.url().includes('/api/auth/login') && response.status() === 200, { timeout: 10000 }).catch(() => {}),
-      loginButton.click()
-    ]);
+    // Wait for login API response and navigation
+    const loginResponsePromise = page.waitForResponse(
+      response => response.url().includes('/api/auth/login') && response.status() === 200,
+      { timeout: 15000 }
+    ).catch(() => null);
     
-    await page.waitForTimeout(3000);
+    const navigationPromise = page.waitForURL('**/', { timeout: 15000 }).catch(() => null);
+    
+    await loginButton.click();
+    
+    // Wait for either login response or navigation
+    await Promise.race([loginResponsePromise, navigationPromise]);
+    
+    // Wait for page to settle after navigation
+    await page.waitForTimeout(2000);
+    
+    // Check if we're still on login page (login failed)
+    const currentUrl = page.url();
+    if (currentUrl.includes('/login')) {
+      // Login might have failed - check for error message
+      const errorMessage = page.locator('text=/错误|失败|invalid|error|登录失败|Invalid/i').first();
+      const hasError = await errorMessage.count() > 0;
+      
+      if (hasError) {
+        console.log('Login failed - error message found');
+      } else {
+        console.log('Login might have failed - still on login page');
+      }
+      
+      // Try to navigate directly to home page to see if we're already authenticated
+      await page.goto('/', { waitUntil: 'networkidle', timeout: 15000 });
+      await page.waitForTimeout(2000);
+    }
     
     // Check if journal list is displayed
     // Look for Flask template elements (journal list, tabs, or journal-related elements)
     const listContainer = page.locator('.journal-list, .journal-entry, [class*="journal"], [class*="entry"]').first();
-    const tabs = page.locator('.tab-btn, [class*="tab"]').first();
+    const tabs = page.locator('.tab-btn').or(page.locator('text=/全部|今天|日期/i'));
     const emptyState = page.locator('text=/暂无|没有|empty|no entries|暂无日志/i').first();
-    const homePageTitle = page.locator('text=/日志|Journal|全部|All|今天|Today/i').first();
+    const homePageTitle = page.locator('text=/我的日志|日志|Journal|全部|All|今天|Today/i').first();
+    const navBar = page.locator('.nav-bar');
     
-    // Either we see entries, tabs, empty state, or home page title
+    // Wait a bit more for elements to appear
+    await page.waitForTimeout(1000);
+    
+    // Either we see entries, tabs, empty state, home page title, or nav bar
     const hasList = await listContainer.count() > 0;
     const hasTabs = await tabs.count() > 0;
     const hasEmptyState = await emptyState.count() > 0;
     const hasHomeTitle = await homePageTitle.count() > 0;
+    const hasNavBar = await navBar.count() > 0;
     
-    expect(hasList || hasTabs || hasEmptyState || hasHomeTitle).toBeTruthy();
+    // More flexible check - if we're not on login page and have any home page elements
+    const isNotOnLogin = !page.url().includes('/login');
+    const hasHomeElements = hasList || hasTabs || hasEmptyState || hasHomeTitle || hasNavBar;
+    
+    expect(isNotOnLogin && hasHomeElements).toBeTruthy();
   });
 
   test('should navigate to settings page', async ({ page }) => {

@@ -142,7 +142,11 @@ def create_app(config_name=None):
     return app
 
 
+# Create app instance for Vercel serverless function
+# Vercel Python runtime requires 'app' to be available at module level
+config_name = os.environ.get("FLASK_ENV", "production")
+app = create_app(config_name)
+
 if __name__ == "__main__":
-    app = create_app()
     port = int(os.environ.get("PORT", 5001))
     app.run(debug=True, host="0.0.0.0", port=port)

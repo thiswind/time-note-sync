@@ -91,6 +91,25 @@ coverage/
 # Vue
 .vuepress/dist
 
+# Testing
+test-results/
+playwright-report/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+logs_result.json
+my-thinking.md
+
+# Old architecture (migrated to monolithic)
+backend/
+frontend/
+
 
 
 
