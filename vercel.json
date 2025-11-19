@@ -12,15 +12,6 @@
       "dest": "app.py"
     }
   ],
-  "functions": {
-    "app.py": {
-      "maxDuration": 30
-    }
-  },
-  "regions": ["iad1"],
-  "github": {
-    "autoDeployOnPush": true,
-    "autoJobCancelation": true
-  }
+  "regions": ["hkg1", "sin1"]
 }
 
