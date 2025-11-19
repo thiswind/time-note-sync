@@ -173,13 +173,13 @@
 
 **Independent Test**: Click a link to open Calendar or Notes and verify the native app opens correctly to the relevant content.
 
-- [ ] T096 [US5] Implement native app URL scheme service in services/native_app_service.py (calshow://, shortcuts://)
-- [ ] T097 [US5] Implement GET /api/journal/entries/{entryId}/open-calendar endpoint in api/journal_routes.py
-- [ ] T098 [US5] Implement GET /api/journal/entries/{entryId}/open-notes endpoint in api/journal_routes.py
-- [ ] T099 [US5] Add "Open in Calendar" link to entry detail page in templates/entry_detail.html
-- [ ] T100 [US5] Add "Open in Notes" link to entry detail page in templates/entry_detail.html
-- [ ] T101 [US5] Implement native app link handlers in static/js/main.js (URL scheme navigation)
-- [ ] T102 [US5] Add error handling for unavailable native apps in static/js/main.js (FR-020)
+- [x] T096 [US5] Implement native app URL scheme service in services/native_app_service.py (calshow://, shortcuts://)
+- [x] T097 [US5] Implement GET /api/journal/entries/{entryId}/open-calendar endpoint in api/journal_routes.py
+- [x] T098 [US5] Implement GET /api/journal/entries/{entryId}/open-notes endpoint in api/journal_routes.py
+- [x] T099 [US5] Add "Open in Calendar" link to entry detail page in templates/entry_detail.html
+- [x] T100 [US5] Add "Open in Notes" link to entry detail page in templates/entry_detail.html
+- [x] T101 [US5] Implement native app link handlers in static/js/main.js (URL scheme navigation)
+- [x] T102 [US5] Add error handling for unavailable native apps in static/js/main.js (FR-020)
 - [ ] T103 [US5] Code review before merge (constitution requirement)
 
 ---

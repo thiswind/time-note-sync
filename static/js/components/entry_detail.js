@@ -41,6 +41,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Native app links (T099, T100)
+    const nativeAppLinks = document.getElementById('nativeAppLinks');
+    const openCalendarBtn = document.getElementById('openCalendarBtn');
+    const openNotesBtn = document.getElementById('openNotesBtn');
+    
+    // Show native app links only when editing existing entry
+    if (!isNewEntry && entryId && nativeAppLinks) {
+        nativeAppLinks.style.display = 'block';
+    }
+    
+    // Open Calendar button handler (T099)
+    if (openCalendarBtn) {
+        openCalendarBtn.addEventListener('click', async function() {
+            if (isNewEntry || !entryId) {
+                alert('请先保存日志');
+                return;
+            }
+            await NativeApp.openCalendar(entryId);
+        });
+    }
+    
+    // Open Notes button handler (T100)
+    if (openNotesBtn) {
+        openNotesBtn.addEventListener('click', async function() {
+            if (isNewEntry || !entryId) {
+                alert('请先保存日志');
+                return;
+            }
+            await NativeApp.openNotes(entryId);
+        });
+    }
+    
     // Form submission handler
     if (form) {
         form.addEventListener('submit', async function(e) {

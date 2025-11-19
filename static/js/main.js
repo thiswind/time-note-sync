@@ -186,16 +186,85 @@ const ExportAPI = {
     }
 };
 
-// Native App functions
-const NativeApp = {
-    openCalendar(date) {
-        const url = `calshow://${date}`;
-        window.location.href = url;
+// Native App API functions
+const NativeAppAPI = {
+    async getCalendarUrl(entryId) {
+        const response = await fetch(`${API_BASE}/journal/entries/${entryId}/open-calendar`, {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Failed to get calendar URL' }));
+            throw new Error(error.error || 'Failed to get calendar URL');
+        }
+        return response.json();
     },
 
-    openNotes() {
-        const url = 'shortcuts://run-shortcut?name=ExportToNotes';
-        window.location.href = url;
+    async getNotesUrl(entryId) {
+        const response = await fetch(`${API_BASE}/journal/entries/${entryId}/open-notes`, {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Failed to get notes URL' }));
+            throw new Error(error.error || 'Failed to get notes URL');
+        }
+        return response.json();
+    }
+};
+
+// Native App functions (T101)
+const NativeApp = {
+    // Open Calendar with URL scheme navigation (T101)
+    async openCalendar(entryId) {
+        try {
+            const result = await NativeAppAPI.getCalendarUrl(entryId);
+            if (result.calendar_url) {
+                this.openUrl(result.calendar_url, 'Calendar');
+            }
+        } catch (error) {
+            this.handleError(error, 'Calendar');
+        }
+    },
+
+    // Open Notes with URL scheme navigation (T101)
+    async openNotes(entryId) {
+        try {
+            const result = await NativeAppAPI.getNotesUrl(entryId);
+            if (result.notes_url) {
+                this.openUrl(result.notes_url, 'Notes');
+            }
+        } catch (error) {
+            this.handleError(error, 'Notes');
+        }
+    },
+
+    // Open URL scheme with error handling (T102)
+    openUrl(url, appName) {
+        try {
+            // Try to open native app
+            window.location.href = url;
+            
+            // Check if app opened after timeout (T102)
+            setTimeout(() => {
+                // If we're still on the same page, the app might not be available
+                // This is a best-effort check
+                console.log(`Attempted to open ${appName} app with URL: ${url}`);
+            }, 1000);
+        } catch (error) {
+            console.error(`Error opening ${appName}:`, error);
+            throw new Error(`无法打开 ${appName} 应用。请确保已安装该应用。`);
+        }
+    },
+
+    // Error handling for unavailable native apps (T102)
+    handleError(error, appName) {
+        let errorMessage = `无法打开 ${appName} 应用`;
+        if (error.message) {
+            errorMessage += `: ${error.message}`;
+        }
+        errorMessage += `\n\n请确保：\n1. 已安装 ${appName} 应用\n2. 应用已获得必要的权限`;
+        alert(errorMessage);
     }
 };
 

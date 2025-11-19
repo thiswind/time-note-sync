@@ -307,3 +307,51 @@ def batch_export_entries():
     except Exception as e:
         logger.error(f"Error batch exporting entries: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
+
+
+@journal_bp.route("/entries/<int:entry_id>/open-calendar", methods=["GET"])
+@login_required
+def open_calendar(entry_id):
+    """Get Calendar URL scheme for opening iPhone Calendar with entry date."""
+    try:
+        entry = JournalService.get_entry(entry_id, current_user.id)
+
+        if not entry:
+            return jsonify({"error": "Journal entry not found"}), 404
+
+        from services.native_app_service import NativeAppService
+
+        calendar_url = NativeAppService.generate_calendar_url(entry=entry)
+
+        logger.info(f"Generated calendar URL for entry {entry_id}")
+        return jsonify({"calendar_url": calendar_url}), 200
+
+    except Exception as e:
+        logger.error(
+            f"Error generating calendar URL for entry {entry_id}: {str(e)}", exc_info=True
+        )
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@journal_bp.route("/entries/<int:entry_id>/open-notes", methods=["GET"])
+@login_required
+def open_notes(entry_id):
+    """Get Notes URL scheme for opening iPhone Notes."""
+    try:
+        entry = JournalService.get_entry(entry_id, current_user.id)
+
+        if not entry:
+            return jsonify({"error": "Journal entry not found"}), 404
+
+        from services.native_app_service import NativeAppService
+
+        notes_url = NativeAppService.generate_notes_url(entry=entry)
+
+        logger.info(f"Generated notes URL for entry {entry_id}")
+        return jsonify({"notes_url": notes_url}), 200
+
+    except Exception as e:
+        logger.error(
+            f"Error generating notes URL for entry {entry_id}: {str(e)}", exc_info=True
+        )
+        return jsonify({"error": "Internal server error"}), 500
